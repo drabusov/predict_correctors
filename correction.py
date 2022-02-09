@@ -53,14 +53,14 @@ def lattice_setup(Qx, Qy, madx):
     K1NL_S00QD1D:=kqd;
     K1NL_S00QD1F:=kqf;
     K1NL_S00QD2F:=kqf;'''
-    
+
     tunes = np.linspace(18.55, 18.95, 10)
     twiss_cold_arr = []
     for Qy in tunes:
         madx.input(cold_str + matching(Qx, Qy))
         twiss = madx.table.twiss.dframe()
         twiss_cold_arr.append(twiss)
-    
+
     return twiss, twiss_cold_arr
 
 
@@ -76,18 +76,18 @@ def add_quadrupole_errors(twiss, dk, madx):
     errors = np.random.normal(0, dk, len(names))
     # save the object to check error set manually if problems
     pickle.dump(errors, open(f"./results/errors_{global_index}.p", "wb"))
-    
+
     # madx wrap
     add_errors = ""
     for name, error_val in zip(names, errors):
         add_errors += "SELECT, FLAG=error, clear;eoption, add=false;"
-        add_errors += f'''SELECT, FLAG=error, PATTERN="{name}*";''' 
+        add_errors += f'''SELECT, FLAG=error, PATTERN="{name}*";'''
         add_errors += '''EFCOMP, ORDER=1, RADIUS=0.01,
         DKNR={0,''' + str(error_val) + "},DKSR={0, 0};\n"
-        
+
     madx.input(add_errors+"twiss;")
     twiss_err = madx.table.twiss.dframe()
-    
+
     return twiss_err
 
 
@@ -112,7 +112,7 @@ def set_quads(theta, madx):
     K1NL_S69QS1J:={};
     K1NL_S6DQS1J:={};'''.format(*theta)
     madx.input(add_correctors + "twiss;")
-    
+
     return madx.table.summ.q1[0], madx.table.summ.q2[0]
 
 
@@ -122,13 +122,14 @@ def set_quads(theta, madx):
 
 
 def find_betabeat(twiss_ref, twiss_curr):
-    
+
     beat_x = np.std(twiss_curr["betx"] / twiss_ref["betx"] - 1.)
     beat_y = np.std(twiss_curr["bety"] / twiss_ref["bety"] - 1.)
-    
+
     return np.sqrt(beat_x**2 + beat_y**2)
 
 def find_stopband(theta, twiss_ref_arr, madx):
+    Qx = 18.75 # !!
     out = []
     tunes = np.linspace(18.55, 18.95, 10)
     for idx, Qy in enumerate(tunes):
@@ -163,7 +164,7 @@ def correct_lattice(stopband0, twiss_cold_arr, madx):
     arg = (twiss_cold_arr, stopband0, madx)
 
     vec = som(objective, theta, method=method, options=optionsDict, args=arg)
-    
+
     return vec
 
 
@@ -174,12 +175,12 @@ def correct_lattice(stopband0, twiss_cold_arr, madx):
 
 
 def prepare_output(vec, stopband0, stopband_fin, twiss):
-    
+
     df = pd.DataFrame()
 
     # it would be better to use here the width!!
-    df['stopband_initial'] = [np.mean(stopband0)] 
-    df['stopband_final'] = [np.mean(stopband_fin)] 
+    df['stopband_initial'] = [np.mean(stopband0)]
+    df['stopband_final'] = [np.mean(stopband_fin)]
 
     df["success"] = [vec.success]
 
@@ -201,7 +202,7 @@ def prepare_output(vec, stopband0, stopband_fin, twiss):
     for i, name in enumerate(corr_variables):
         # times 1000 to keep precision
         df[name] = [1e3*vec.x[i]]
-    
+
     bpmx = twiss[twiss["keyword"].str.contains("hmonitor")][["name", "betx"]]
     bpmy = twiss[twiss["keyword"].str.contains("vmonitor")][["name", "bety"]]
 
@@ -210,7 +211,7 @@ def prepare_output(vec, stopband0, stopband_fin, twiss):
 
     for name, beta in zip(bpmy["name"], bpmy["bety"]):
         df[name[:-2]] = [beta]
-        
+
     return df
 
 
@@ -218,7 +219,8 @@ def prepare_output(vec, stopband0, stopband_fin, twiss):
 
 # In[11]:
 
-def run(dk, global_index):
+def run(global_index):
+    dk = 1e-3
     Qx, Qy = 18.75, 18.8
     madx = Madx(stdout=False)
     twiss, twiss_cold_arr = lattice_setup(Qx,Qy, madx)
