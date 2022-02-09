@@ -69,13 +69,13 @@ def lattice_setup(Qx, Qy, madx):
 # In[4]:
 
 
-def add_quadrupole_errors(twiss, dk, madx):
+def add_quadrupole_errors(twiss, dk, madx, global_index):
     # select quadrupoles
     names = [name.strip()[:-2] for name in twiss[twiss["keyword"].str.contains("quadrupole")]["name"].tolist()]
     # generate random errors (python)
     errors = np.random.normal(0, dk, len(names))
     # save the object to check error set manually if problems
-    pickle.dump(errors, open(f"./results/errors_{global_index}.p", "wb"))
+    pickle.dump(errors, open(f"/lustre/bhs/drabusov/cluster-testing/2022-02-09/predict_correctors/results/errors_{global_index}.p","wb"))
 
     # madx wrap
     add_errors = ""
@@ -220,17 +220,20 @@ def prepare_output(vec, stopband0, stopband_fin, twiss):
 # In[11]:
 
 def run(global_index):
-    dk = 1e-3
+
+    global_index += 1000
+
+    dk = 1e-4
     Qx, Qy = 18.75, 18.8
     madx = Madx(stdout=False)
     twiss, twiss_cold_arr = lattice_setup(Qx,Qy, madx)
-    twiss_err = add_quadrupole_errors(twiss, dk, madx)
+    twiss_err = add_quadrupole_errors(twiss, dk, madx, global_index)
     theta = np.zeros(12)
     stopband0 = find_stopband(theta, twiss_cold_arr, madx)
     vec = correct_lattice(stopband0, twiss_cold_arr, madx)
     stopband_fin = find_stopband(vec.x, twiss_cold_arr, madx)
-    df = prepare_output(vec, stopband0, stopband_fin, twiss)
-    df.to_csv(f"./results/output_{global_index}.csv", index=False)
+    df = prepare_output(vec, stopband0, stopband_fin, twiss_err)
+    df.to_csv(f"/lustre/bhs/drabusov/cluster-testing/2022-02-09/predict_correctors/results/output_{global_index}.csv", index=False)
     return True
 
 
