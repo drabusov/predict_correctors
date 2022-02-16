@@ -117,7 +117,7 @@ QS1J            :       QUADRUPOLE  ,   L = LQJ										;
 S00MH           :       SBEND       ,   L = LMH,  ANGLE := AMH, E1 := AMH/2, E2 := AMH/2,HGAP := 0.034,FINT := 0.35	;
 KS1E            :       SEXTUPOLE   ,   L = LKS1E									;
 KS1C            :       SEXTUPOLE   ,   L = LKS1C		                                                       	;
-KM1             :       MULTIPOLE   ,   L = LKM1        ,  KNL = {0            ,k1nl_S00KM1Q ,0            ,k3nl_S00KM10 },KSL = {0            ,k1sl_S00KM1Q ,k2sl_S00KM1S ,k3sl_S00KM1O };
+KM1             :       MULTIPOLE   ,   L = LKM1        ,  KNL = {0, 0},KSL = {0, 0};
 KHV             :       KICKER      ,   L = LKHV        	                                                	;
 
 BPMH            :       HMONITOR    ,   L = LBPMH       	                                                	;
@@ -159,7 +159,7 @@ S14DX1H         :       BPMH        ,                     at = 10.002        ,  
 S14DX1V         :       BPMV        ,                     at = 10.152        ,      from = CELL_14;
 S14KHV1         :       KHV         ,                     at = 10.87         ,      from = CELL_14,  HKICK := k0nl_S14KH1/LKHV,  VKICK := k0sl_S14KV1/LKHV;
 S14QD12         :       QUAD_COLD   ,                     at = 11.8          ,      from = CELL_14,  K1 := k1nl_S00QD2F/LQD;
-S14KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_14;
+S14KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_14, KNL := {0.0, K1NL_S14KM1Q};
 CELL_15         :       MARKERCELL  ,                     at = 12.9          ,      from = CELL_14 ;
 S15MH1          :       S00MH       ,                     at = 2.324997662   ,      from = CELL_15;
 S15KS1CV        :       KS1C        ,                     at = 8.220000944   ,      from = CELL_15,  K2 := k2nl_S15KS1CV/LKS1C;
@@ -242,7 +242,7 @@ S1DQD12         :       QUAD_COLD   ,                     at = 11.670001848  ,  
 S1DQS1J         :       QS1J        ,                     at = 12.650001848  ,      from = CELL_1D,  K1 := K1NL_S1DQS1J/LQJ;
 CELL_1E         :       MARKERCELL  ,                     at = 12.900001848  ,      from = CELL_1D ;
 S1EMH1          :       S00MH       ,                     at = 5.645003282   ,      from = CELL_1E;
-S1EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_1E;
+S1EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_1E, KNL := {0.0, K1NL_S1EKM1Q};
 S1EQD11         :       QUAD_COLD   ,                     at = 9.070000964   ,      from = CELL_1E,  K1 := k1nl_S00QD1D/LQD;
 S1EKHV1         :       KHV         ,                     at = 10.740000964  ,      from = CELL_1E,  HKICK := k0nl_S1EKH1/LKHV,  VKICK := k0sl_S1EKV1/LKHV;
 S1EQD12         :       QUAD_COLD   ,                     at = 11.670000964  ,      from = CELL_1E,  K1 := k1nl_S00QD1F/LQD;
@@ -276,7 +276,7 @@ S24DX1H         :       BPMH        ,                     at = 10.002        ,  
 S24DX1V         :       BPMV        ,                     at = 10.152        ,      from = CELL_24;
 S24KHV1         :       KHV         ,                     at = 10.87         ,      from = CELL_24,  HKICK := k0nl_S14KH1/LKHV,  VKICK := k0sl_S14KV1/LKHV;
 S24QD12         :       QUAD_COLD   ,                     at = 11.8          ,      from = CELL_24,  K1 := k1nl_S00QD2F/LQD;
-S24KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_24;
+S24KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_24, KNL := {0.0, K1NL_S24KM1Q};
 CELL_25         :       MARKERCELL  ,                     at = 12.9          ,      from = CELL_24 ;
 S25MH1          :       S00MH       ,                     at = 2.324997662   ,      from = CELL_25;
 S25KS1CV        :       KS1C        ,                     at = 8.220000944   ,      from = CELL_25,  K2 := k2nl_S15KS1CV/LKS1C;
@@ -359,7 +359,7 @@ S2DQD12         :       QUAD_COLD   ,                     at = 11.670001848  ,  
 S2DQS1J         :       QS1J        ,                     at = 12.650001848  ,      from = CELL_2D,  K1 := K1NL_S1DQS1J/LQJ;
 CELL_2E         :       MARKERCELL  ,                     at = 12.900001848  ,      from = CELL_2D ;
 S2EMH1          :       S00MH       ,                     at = 5.645003282   ,      from = CELL_2E;
-S2EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_2E;
+S2EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_2E, KNL := {0.0, K1NL_S2EKM1Q};
 S2EQD11         :       QUAD_COLD   ,                     at = 9.070000964   ,      from = CELL_2E,  K1 := k1nl_S00QD1D/LQD;
 S2EKHV1         :       KHV         ,                     at = 10.740000964  ,      from = CELL_2E,  HKICK := k0nl_S1EKH1/LKHV,  VKICK := k0sl_S1EKV1/LKHV;
 S2EQD12         :       QUAD_COLD   ,                     at = 11.670000964  ,      from = CELL_2E,  K1 := k1nl_S00QD1F/LQD;
@@ -393,7 +393,7 @@ S34DX1H         :       BPMH        ,                     at = 10.002        ,  
 S34DX1V         :       BPMV        ,                     at = 10.152        ,      from = CELL_34;
 S34KHV1         :       KHV         ,                     at = 10.87         ,      from = CELL_34,  HKICK := k0nl_S14KH1/LKHV,  VKICK := k0sl_S14KV1/LKHV;
 S34QD12         :       QUAD_COLD   ,                     at = 11.8          ,      from = CELL_34,  K1 := k1nl_S00QD2F/LQD;
-S34KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_34;
+S34KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_34, KNL := {0.0, K1NL_S34KM1Q};
 CELL_35         :       MARKERCELL  ,                     at = 12.9          ,      from = CELL_34 ;
 S35MH1          :       S00MH       ,                     at = 2.324997662   ,      from = CELL_35;
 S35KS1CV        :       KS1C        ,                     at = 8.220000944   ,      from = CELL_35,  K2 := k2nl_S15KS1CV/LKS1C;
@@ -476,7 +476,7 @@ S3DQD12         :       QUAD_COLD   ,                     at = 11.670001848  ,  
 S3DQS1J         :       QS1J        ,                     at = 12.650001848  ,      from = CELL_3D,  K1 := K1NL_S1DQS1J/LQJ;
 CELL_3E         :       MARKERCELL  ,                     at = 12.900001848  ,      from = CELL_3D ;
 S3EMH1          :       S00MH       ,                     at = 5.645003282   ,      from = CELL_3E;
-S3EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_3E;
+S3EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_3E, KNL := {0.0, K1NL_S3EKM1Q};
 S3EQD11         :       QUAD_COLD   ,                     at = 9.070000964   ,      from = CELL_3E,  K1 := k1nl_S00QD1D/LQD;
 S3EKHV1         :       KHV         ,                     at = 10.740000964  ,      from = CELL_3E,  HKICK := k0nl_S1EKH1/LKHV,  VKICK := k0sl_S1EKV1/LKHV;
 S3EQD12         :       QUAD_COLD   ,                     at = 11.670000964  ,      from = CELL_3E,  K1 := k1nl_S00QD1F/LQD;
@@ -510,7 +510,7 @@ S44DX1H         :       BPMH        ,                     at = 10.002        ,  
 S44DX1V         :       BPMV        ,                     at = 10.152        ,      from = CELL_44;
 S44KHV1         :       KHV         ,                     at = 10.87         ,      from = CELL_44,  HKICK := k0nl_S14KH1/LKHV,  VKICK := k0sl_S14KV1/LKHV;
 S44QD12         :       QUAD_COLD   ,                     at = 11.8          ,      from = CELL_44,  K1 := k1nl_S00QD2F/LQD;
-S44KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_44;
+S44KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_44, KNL := {0.0, K1NL_S44KM1Q};
 CELL_45         :       MARKERCELL  ,                     at = 12.9          ,      from = CELL_44 ;
 S45MH1          :       S00MH       ,                     at = 2.324997662   ,      from = CELL_45;
 S45KS1CV        :       KS1C        ,                     at = 8.220000944   ,      from = CELL_45,  K2 := k2nl_S15KS1CV/LKS1C;
@@ -593,7 +593,7 @@ S4DQD12         :       QUAD_COLD   ,                     at = 11.670001848  ,  
 S4DQS1J         :       QS1J        ,                     at = 12.650001848  ,      from = CELL_4D,  K1 := K1NL_S1DQS1J/LQJ;
 CELL_4E         :       MARKERCELL  ,                     at = 12.900001848  ,      from = CELL_4D ;
 S4EMH1          :       S00MH       ,                     at = 5.645003282   ,      from = CELL_4E;
-S4EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_4E;
+S4EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_4E, KNL := {0.0, K1NL_S4EKM1Q};
 S4EQD11         :       QUAD_COLD   ,                     at = 9.070000964   ,      from = CELL_4E,  K1 := k1nl_S00QD1D/LQD;
 S4EKHV1         :       KHV         ,                     at = 10.740000964  ,      from = CELL_4E,  HKICK := k0nl_S1EKH1/LKHV,  VKICK := k0sl_S1EKV1/LKHV;
 S4EQD12         :       QUAD_COLD   ,                     at = 11.670000964  ,      from = CELL_4E,  K1 := k1nl_S00QD1F/LQD;
@@ -641,7 +641,7 @@ S54DX1H         :       BPMH        ,                     at = 10.002        ,  
 S54DX1V         :       BPMV        ,                     at = 10.152        ,      from = CELL_54;
 S54KHV1         :       KHV         ,                     at = 10.87         ,      from = CELL_54,  HKICK := k0nl_S54KH1/LKHV,  VKICK := k0sl_S54KV1/LKHV;
 S54QD12         :       QUAD_COLD   ,                     at = 11.8          ,      from = CELL_54,  K1 := k1nl_S00QD2F/LQD;
-S54KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_54;
+S54KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_54, KNL := {0.0, K1NL_S54KM1Q};
 CELL_55         :       MARKERCELL  ,                     at = 12.9          ,      from = CELL_54 ;
 S55MH1          :       S00MH       ,                     at = 2.324997642   ,      from = CELL_55;
 S55KS1CV        :       KS1C        ,                     at = 8.220000924   ,      from = CELL_55,  K2 := k2nl_S55KS1CV/LKS1C;
@@ -724,7 +724,7 @@ S5DQD12         :       QUAD_COLD   ,                     at = 11.670001848  ,  
 S5DQS1J         :       QS1J        ,                     at = 12.650001848  ,      from = CELL_5D,  K1 := K1NL_S5DQS1J/LQJ;
 CELL_5E         :       MARKERCELL  ,                     at = 12.900001848  ,      from = CELL_5D ;
 S5EMH1          :       S00MH       ,                     at = 5.645003282   ,      from = CELL_5E;
-S5EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_5E;
+S5EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_5E, KNL := {0.0, K1NL_S5EKM1Q};
 S5EQD11         :       QUAD_COLD   ,                     at = 9.070000964   ,      from = CELL_5E,  K1 := k1nl_S00QD1D/LQD;
 S5EKHV1         :       KHV         ,                     at = 10.740000964  ,      from = CELL_5E,  HKICK := k0nl_S5EKH1/LKHV,  VKICK := k0sl_S5EKV1/LKHV;
 S5EQD12         :       QUAD_COLD   ,                     at = 11.670000964  ,      from = CELL_5E,  K1 := k1nl_S00QD1F/LQD;
@@ -759,7 +759,7 @@ S64DX1H         :       BPMH        ,                     at = 10.002        ,  
 S64DX1V         :       BPMV        ,                     at = 10.152        ,      from = CELL_64;
 S64KHV1         :       KHV         ,                     at = 10.87         ,      from = CELL_64,  HKICK := k0nl_S14KH1/LKHV,  VKICK := k0sl_S14KV1/LKHV;
 S64QD12         :       QUAD_COLD   ,                     at = 11.8          ,      from = CELL_64,  K1 := k1nl_S00QD2F/LQD;
-S64KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_64;
+S64KM1          :       KM1         ,                     at = 12.88         ,      from = CELL_64, KNL := {0.0, K1NL_S64KM1Q};
 CELL_65         :       MARKERCELL  ,                     at = 12.9          ,      from = CELL_64 ;
 S65MH1          :       S00MH       ,                     at = 2.324997662   ,      from = CELL_65;
 S65KS1CV        :       KS1C        ,                     at = 8.220000944   ,      from = CELL_65,  K2 := k2nl_S15KS1CV/LKS1C;
@@ -842,7 +842,7 @@ S6DQD12         :       QUAD_COLD   ,                     at = 11.670001848  ,  
 S6DQS1J         :       QS1J        ,                     at = 12.650001848  ,      from = CELL_6D,  K1 := K1NL_S1DQS1J/LQJ;
 CELL_6E         :       MARKERCELL  ,                     at = 12.900001848  ,      from = CELL_6D ;
 S6EMH1          :       S00MH       ,                     at = 5.645003282   ,      from = CELL_6E;
-S6EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_6E;
+S6EKM1          :       KM1         ,                     at = 7.990000964   ,      from = CELL_6E, KNL := {0.0, K1NL_S6EKM1Q};
 S6EQD11         :       QUAD_COLD   ,                     at = 9.070000964   ,      from = CELL_6E,  K1 := k1nl_S00QD1D/LQD;
 S6EKHV1         :       KHV         ,                     at = 10.740000964  ,      from = CELL_6E,  HKICK := k0nl_S1EKH1/LKHV,  VKICK := k0sl_S1EKV1/LKHV;
 S6EQD12         :       QUAD_COLD   ,                     at = 11.670000964  ,      from = CELL_6E,  K1 := k1nl_S00QD1F/LQD;
