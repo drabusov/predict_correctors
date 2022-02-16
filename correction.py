@@ -6,7 +6,6 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from scipy.optimize import minimize as som
 import pickle
 from cpymad.madx import Madx
@@ -44,7 +43,7 @@ def lattice_setup(Qx, Qy, madx):
     cold_str = '''CALL, FILE = "Optics-YEH-Jan19-from-Elegant.str";
     CALL, FILE = "sis100cold.seq";
 
-    beam, particle = ion, mass= 221.6955947052, charge=28, sequence=SIS100RING, energy = 269.29559470519996; !beta = 0.5676897813711054;
+    beam, particle = ion, mass= 221.6955947052, charge=28, sequence=SIS100RING, energy = 269.29559470519996;
     use, sequence=SIS100RING;
 
     kqd : = -2.158585731120552e-01 * LQD;
@@ -53,14 +52,14 @@ def lattice_setup(Qx, Qy, madx):
     K1NL_S00QD1D:=kqd;
     K1NL_S00QD1F:=kqf;
     K1NL_S00QD2F:=kqf;'''
-
-    tunes = np.linspace(18.55, 18.95, 10)
+       
+    tunes = np.linspace(18.55, Qy, 10)
     twiss_cold_arr = []
-    for Qy in tunes:
-        madx.input(cold_str + matching(Qx, Qy))
+    for qy in tunes:
+        madx.input(cold_str + matching(Qx, qy))
         twiss = madx.table.twiss.dframe()
         twiss_cold_arr.append(twiss)
-
+    
     return twiss, twiss_cold_arr
 
 
@@ -96,7 +95,6 @@ def add_quadrupole_errors(twiss, dk, madx, global_index):
 # In[5]:
 
 
-# modify lattice, add more correctors!
 def set_quads(theta, madx):
     add_correctors = '''
     K1NL_S19QS1J:={};
@@ -110,9 +108,23 @@ def set_quads(theta, madx):
     K1NL_S59QS1J:={};
     K1NL_S5DQS1J:={};
     K1NL_S69QS1J:={};
-    K1NL_S6DQS1J:={};'''.format(*theta)
+    K1NL_S6DQS1J:={};
+    
+    K1NL_S14KM1Q:={};
+    K1NL_S1EKM1Q:={};
+    K1NL_S24KM1Q:={};
+    K1NL_S2EKM1Q:={};
+    K1NL_S34KM1Q:={};
+    K1NL_S3EKM1Q:={};
+    K1NL_S44KM1Q:={};
+    K1NL_S4EKM1Q:={};
+    K1NL_S54KM1Q:={};
+    K1NL_S5EKM1Q:={};
+    K1NL_S64KM1Q:={};
+    K1NL_S6EKM1Q:={};
+    '''.format(*theta)
     madx.input(add_correctors + "twiss;")
-
+    
     return madx.table.summ.q1[0], madx.table.summ.q2[0]
 
 
@@ -155,11 +167,11 @@ def objective(theta, twiss_ref_arr, stopband_initial, madx):
 def correct_lattice(stopband0, twiss_cold_arr, madx):
     # try to replace with optuna (optionally)
     method = 'COBYLA'
-    epsilon, ftol, catol = 5e-4, 1e-6, 1e-6
+    epsilon, maxiter = 1e-3, 10000
 
-    theta = np.zeros(12) # initial guess
+    theta = np.zeros(24) # initial guess
 
-    optionsDict = {'rhobeg':epsilon, 'catol':catol, "tol":ftol,'disp': True}
+    optionsDict = {'rhobeg':epsilon, 'maxiter':maxiter ,'disp': True}
 
     arg = (twiss_cold_arr, stopband0, madx)
 
@@ -184,19 +196,10 @@ def prepare_output(vec, stopband0, stopband_fin, twiss):
 
     df["success"] = [vec.success]
 
-    corr_variables = [
-        'K1NL_S19QS1J',
-        'K1NL_S1DQS1J',
-        'K1NL_S29QS1J',
-        'K1NL_S2DQS1J',
-        'K1NL_S39QS1J',
-        'K1NL_S3DQS1J',
-        'K1NL_S49QS1J',
-        'K1NL_S4DQS1J',
-        'K1NL_S59QS1J',
-        'K1NL_S5DQS1J',
-        'K1NL_S69QS1J',
-        'K1NL_S6DQS1J'
+    corr_variables = ['K1NL_S19QS1J','K1NL_S1DQS1J','K1NL_S29QS1J','K1NL_S2DQS1J','K1NL_S39QS1J','K1NL_S3DQS1J',
+                      'K1NL_S49QS1J','K1NL_S4DQS1J','K1NL_S59QS1J','K1NL_S5DQS1J','K1NL_S69QS1J','K1NL_S6DQS1J',
+                      'K1NL_S14KM1Q','K1NL_S1EKM1Q','K1NL_S24KM1Q','K1NL_S2EKM1Q','K1NL_S34KM1Q','K1NL_S3EKM1Q',
+                      'K1NL_S44KM1Q','K1NL_S4EKM1Q','K1NL_S54KM1Q','K1NL_S5EKM1Q','K1NL_S64KM1Q','K1NL_S6EKM1Q'
     ]
 
     for i, name in enumerate(corr_variables):
@@ -220,19 +223,17 @@ def prepare_output(vec, stopband0, stopband_fin, twiss):
 # In[11]:
 
 def run(global_index):
-
-    global_index += 1000
-
-    dk = 1e-4
+    global_index += 0
+    dk = 1e-3
     Qx, Qy = 18.75, 18.8
     madx = Madx(stdout=False)
     twiss, twiss_cold_arr = lattice_setup(Qx,Qy, madx)
     twiss_err = add_quadrupole_errors(twiss, dk, madx, global_index)
-    theta = np.zeros(12)
+    theta = np.zeros(24)
     stopband0 = find_stopband(theta, twiss_cold_arr, madx)
     vec = correct_lattice(stopband0, twiss_cold_arr, madx)
     stopband_fin = find_stopband(vec.x, twiss_cold_arr, madx)
-    df = prepare_output(vec, stopband0, stopband_fin, twiss_err)
+    df = prepare_output(vec, stopband0, stopband_fin, twiss)
     df.to_csv(f"/lustre/bhs/drabusov/cluster-testing/2022-02-09/predict_correctors/results/output_{global_index}.csv", index=False)
     return True
 
